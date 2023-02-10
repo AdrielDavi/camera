@@ -1,0 +1,15 @@
+import pytesseract as pt
+import cv2
+import numpy as np
+pt.pytesseract.tesseract_cmd = ("C:\Program Files\Tesseract-OCR\Tesseract.exe")
+
+imagem = cv2.imread("poesia.jpg")
+
+alpha = 1.5 # valor de contraste
+beta = 0 # valor de brilho
+imagem_ajustada = cv2.addWeighted(imagem, alpha, np.zeros(imagem.shape, imagem.dtype), 0, beta)
+
+imagem_ajustada = cv2.resize(imagem_ajustada, (640, 480))
+cv2.imshow("img",imagem_ajustada)
+cv2.waitKey(0)
+print(pt.pytesseract.image_to_string(imagem_ajustada, lang="por"))
