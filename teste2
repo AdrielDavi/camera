@@ -7,13 +7,15 @@ engine = pyttsx3.init()
 pt.pytesseract.tesseract_cmd = ("C:\Program Files\Tesseract-OCR\Tesseract.exe")
 
 video = cv2.VideoCapture()
-ip = "https://10.0.0.100:8080/video"
+ip = "https://192.168.0.100:8080/video"    #SEPTO:"https://10.0.0.100:8080/video"         #"https://192.168.0.100:8080/video" 
 video.open(ip)
 
 while True:
     check, img = video.read()
     img = cv2.resize(img, (640, 480))    
-    cv2.imshow("img",img)
+    img = cv2.transpose(img)
+    img = cv2.flip(img, 1)
+    cv2.imshow("img", img)
     cv2.imwrite("capture.png", img)
     if cv2.waitKey(1) & 0xff == ord('s'):
         break
