@@ -5,10 +5,18 @@ import pyautogui
 
 engine = pyttsx3.init()
 pt.pytesseract.tesseract_cmd = ("C:\Program Files\Tesseract-OCR\Tesseract.exe")
+config = r'--oem 2 --psm 6'            # OK:  r'--oem 2 --psm 6'
 
 video = cv2.VideoCapture()
-ip = "https://192.168.0.100:8080/video"    #SEPTO:"https://10.0.0.100:8080/video"         #"https://192.168.0.100:8080/video" 
+ip = "https://10.0.0.100:8080/video"    #SEPTO:"https://10.0.0.100:8080/video"         #"https://192.168.0.100:8080/video" 
 video.open(ip)
+
+#USAR DEPOIS:
+#imagem_ajustada = cv2.threshold(imagem_ajustada, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1] #dá um contraste ao branco e preto
+#imagem_ajustada = cv2.Canny(imagem_ajustada, 100, 200) #dar uma olha
+
+
+
 
 while True:
     check, img = video.read()
@@ -21,7 +29,7 @@ while True:
         break
 
 imagem = cv2.imread("capture.png")
-print(pt.pytesseract.image_to_string(imagem, lang= "por"))
+print(pt.pytesseract.image_to_string(imagem, lang= "por", config = config))
 caixas = (pt.pytesseract.image_to_boxes(imagem))
 
 imH,imW,_ = imagem.shape
