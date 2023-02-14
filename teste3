@@ -1,18 +1,24 @@
 import pytesseract as pt
 import cv2
 import numpy as np
+from spellchecker import SpellChecker
+
+spell = SpellChecker(language='pt') #Dicionário português - Portugal
 pt.pytesseract.tesseract_cmd = ("C:\Program Files\Tesseract-OCR\Tesseract.exe")
 
 imagem = cv2.imread("poesia.jpg")
 
-kernel = np.ones((5,5),np.uint8) 
 
-imagem_ajustada = cv2.resize(imagem, (640, 480))
-imagem_ajustada = cv2.cvtColor(imagem_ajustada, cv2.COLOR_BGR2GRAY)
-#imagem_ajustada = cv2.threshold(imagem_ajustada, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1] #interessante
-#imagem_ajustada = cv2.Canny(imagem_ajustada, 100, 200) #dar uma olha
-
-
-cv2.imshow("img",imagem_ajustada)
+cv2.imshow("img",imagem)
 cv2.waitKey(0)
-print(pt.pytesseract.image_to_string(imagem_ajustada, lang="por", config='--psm 0'))
+frase = pt.pytesseract.image_to_string(imagem, lang="por", config='--psm 6')
+words: list = frase.split()
+list_of_correct_words = []
+for word in words:
+    corrected_word = spell.correction(word)
+    if corrected_word is None:
+        corrected_word = word
+    list_of_correct_words.append(corrected_word)
+
+string_sem_loop = ' '.join(list_of_correct_words)
+print(string_sem_loop)
