@@ -1,14 +1,17 @@
-palavras = "casa mortes vida alma postes luz casa marta"
+import cv2
+import math
 
-l = ["1","2","3"]
+img = cv2.imread('ex.jpeg')
 
-"""palavra = ""
-l = []
-for i in palavras:
-    if i != " ":
-        palavra += i
-    else:
-        l.append(palavra)
-        palavra = ""
-"""
-print(palavras.split())
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+edges = cv2.Canny(gray, 50, 150, apertureSize=3)
+
+lines = cv2.HoughLines(edges, 1, math.pi/180, 200)
+
+angle = lines[0][0][1] * 180 / math.pi
+
+rows, cols, _ = img.shape
+M = cv2.getRotationMatrix2D((cols/2, rows/2), angle, 1)
+rotated = cv2.warpAffine(img, M, (cols, rows))
+rotacao = cv2.rotate(rotated, cv2.ROTATE_90_CLOCKWISE)
+cv2.imwrite('rotated.jpeg', rotacao)
